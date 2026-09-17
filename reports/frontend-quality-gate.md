@@ -28,7 +28,7 @@ Confirmar número profissional, necessidade/base jurídica do texto opcional, tr
 
 ## Reavaliação — narrativa de movimento (17/09/2026)
 
-**Aprovado com observações**
+Resultado da reavaliação: nenhum bloqueador; permanecem as observações de publicação registradas neste relatório.
 
 | Área | Status | Evidência |
 | --- | --- | --- |
@@ -40,3 +40,12 @@ Confirmar número profissional, necessidade/base jurídica do texto opcional, tr
 | Segurança e LGPD | Sem novo risco | Movimento não lê nem persiste dados pessoais e não adiciona terceiros ou rede. Pendências de publicação anteriores continuam válidas. |
 
 Observação: conferir Safari/iOS em dispositivo real antes da publicação. Isso não bloqueia o protótipo local nem a avaliação desta branch.
+
+## Verificação rápida — links do rodapé (17/09/2026)
+
+Resultado da verificação: nenhum achado bloqueador ou importante.
+
+- Estado fechado e aberto inspecionados no navegador; o texto expandido permanece abaixo do título.
+- Sem alteração de semântica: `<details>` e `<summary>` preservam teclado e estado acessível.
+- Regressão automatizada aprovada entre 320×720 e 1874×856, sem overflow, erro de console ou quebra dos fluxos existentes.
+- Mudança restrita ao CSS, sem impacto no tratamento de dados ou em integrações.

@@ -52,3 +52,7 @@ A alteração é estritamente visual e não modifica o fluxo de dados. O control
 - As pendências de publicação já registradas — número provisório, campo livre, WhatsApp, canal do titular e validação profissional/jurídica — permanecem inalteradas.
 
 Conclusão desta alteração: nenhum novo risco de segurança ou LGPD identificado. O risco residual do protótipo continua moderado pelos motivos anteriores, não pela animação.
+
+## Atualização — apresentação do aviso de privacidade (17/09/2026)
+
+A alteração remove apenas o marcador visual nativo e padroniza os links do rodapé. O controle continua sendo um `<details>` semântico, operável por teclado e com estado expandido/recolhido exposto às tecnologias assistivas. O texto, o fluxo de dados, os terceiros e as pendências LGPD permanecem inalterados.
