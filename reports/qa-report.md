@@ -28,6 +28,8 @@ Fluxos principais aprovados após correções. Teste automatizado final: `PASS`.
 | QA-05 | Importante | Transparências invadiam a área textual do hero móvel e reduziam a leitura; título estava excessivamente largo. | Círculos movidos abaixo do conteúdo, opacidade reduzida e tipografia/entrelinha balanceadas. | Aprovada em 320, 375, 768, 1024 e 1440 px. |
 | QA-06 | Importante | Em telas muito largas e baixas, o texto auxiliar, a frase final e a folha se sobrepunham ao conteúdo principal. | Hero recebeu altura mínima segura, escala tipográfica também limitada pela altura da tela e zonas verticais independentes para nota, folha e frase final. | Aprovada especificamente em 1874×856 e na regressão completa. |
 | QA-07 | Importante | O retrato em “Sobre” ocupava uma coluna excessiva e o preenchimento da moldura dava aparência ampliada e recortada. | Moldura limitada a 368 px no desktop, proporção 4:5 preservada com `object-fit: contain` e `srcset` ampliado até 1120 px. | Aprovada em 320, 375, 768, 1024, 1115, 1440 e 1874 px. |
+| QA-08 | Importante | O questionário exigia “Continuar” após cada escolha e não oferecia uma finalização útil. | Cada rádio avança automaticamente; a seta permite retornar; a tela final tem texto opcional, prévia e acesso ao WhatsApp provisório. | Aprovada por mouse e teclado, incluindo retorno e troca de resposta. |
+| QA-09 | Refinamento | A navegação do cabeçalho não fornecia resposta visual refinada ao hover. | Links receberam linha em gradiente com entrada lateral de 580 ms; o CTA ganhou elevação, escala, cor e sombra suaves, com equivalência por foco e redução de movimento. | Aprovada em mouse, teclado, touch sem hover e `prefers-reduced-motion`. |
 
 ## Evidências
 
@@ -36,4 +38,4 @@ Capturas estão em `reports/screenshots/`, incluindo página completa nas cinco 
 ## Observações
 
 - Safari/iOS e dispositivos físicos não foram executados neste ambiente; recomenda-se uma conferência curta antes da publicação.
-- O botão final copia a mensagem porque o número profissional de WhatsApp ainda não foi fornecido. Isso é uma pendência de conteúdo, não uma falha do fluxo atual.
+- O WhatsApp usa provisoriamente `17 9812-1449`; confirmar o número definitivo antes da publicação.

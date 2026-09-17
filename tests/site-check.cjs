@@ -3,7 +3,7 @@ const fs = require("node:fs");
 const path = require("node:path");
 
 const baseUrl = process.env.SITE_URL || "http://127.0.0.1:4173";
-const outputDir = path.resolve(__dirname, "..", "reports", "screenshots");
+const outputDir = path.resolve(__dirname, "..", "reports", "screenshots", process.env.SCREENSHOT_RUN || "");
 fs.mkdirSync(outputDir, { recursive: true });
 
 const sizes = [
@@ -108,20 +108,25 @@ const sizes = [
   if ((await menu.getAttribute("aria-expanded")) !== "false") failures.push("menu: Escape não fechou");
 
   await page.locator("#agendamento").scrollIntoViewIfNeeded();
-  await page.locator("[data-form-next]").click();
-  if (!(await page.locator("[data-form-status]").textContent()).includes("Escolha")) {
-    failures.push("agendamento: validação obrigatória não informou o erro");
-  }
   await page.locator('input[name="publico"][value="adulto"]').check();
-  await page.locator("[data-form-next]").click();
+  await page.waitForTimeout(250);
+  if (!(await page.locator('[data-form-step]:nth-of-type(2)').isVisible())) failures.push("agendamento: não avançou automaticamente para modalidade");
+  await page.locator("[data-form-back]").click();
+  await page.locator('label:has(input[name="publico"][value="adulto"]) span').click();
+  await page.waitForTimeout(250);
   await page.locator('input[name="modalidade"][value="on-line"]').check();
-  await page.locator("[data-form-next]").click();
+  await page.waitForTimeout(250);
   await page.locator('input[name="periodo"][value="tarde"]').check();
-  await page.locator("[data-form-next]").click();
+  await page.waitForTimeout(250);
+  await page.locator("[data-contact-note]").fill("Prefiro receber informações sobre horários disponíveis.");
   const summary = await page.locator("[data-result-copy]").textContent();
-  if (!summary.includes("adulto") || !summary.includes("on-line") || !summary.includes("tarde")) {
+  if (!summary.includes("adulto") || !summary.includes("on-line") || !summary.includes("tarde") || !summary.includes("horários disponíveis")) {
     failures.push("agendamento: resumo incorreto");
   }
+  const whatsappHref = await page.locator("[data-whatsapp-send]").getAttribute("href");
+  if (whatsappHref !== "https://wa.me/551798121449") failures.push("agendamento: número provisório incorreto");
+  if ((await page.locator("[data-form-next]").count()) !== 0) failures.push("agendamento: botão Continuar ainda existe");
+  await page.screenshot({ path: path.join(outputDir, "booking-result-375.png") });
 
   const reducedPage = await browser.newPage({ viewport: { width: 375, height: 812 }, reducedMotion: "reduce" });
   await reducedPage.goto(baseUrl, { waitUntil: "networkidle" });
@@ -130,6 +135,29 @@ const sizes = [
   );
   if (hiddenWithReducedMotion) failures.push("movimento reduzido: conteúdo ficou oculto");
   await reducedPage.close();
+
+  const headerPage = await browser.newPage({ viewport: { width: 1440, height: 900 } });
+  await headerPage.goto(baseUrl, { waitUntil: "networkidle" });
+  const aboutLink = headerPage.getByRole("link", { name: "Sobre", exact: true });
+  await aboutLink.hover();
+  await headerPage.waitForTimeout(650);
+  const underlineState = await aboutLink.evaluate(element => ({
+    opacity: getComputedStyle(element, "::after").opacity,
+    transform: getComputedStyle(element, "::after").transform,
+  }));
+  if (underlineState.opacity !== "1" || underlineState.transform === "none") failures.push("header: sublinhado do hover não apareceu");
+
+  const headerCta = headerPage.getByRole("link", { name: "Agendar conversa", exact: true });
+  const restingShadow = await headerCta.evaluate(element => getComputedStyle(element).boxShadow);
+  await headerCta.hover();
+  await headerPage.waitForTimeout(650);
+  const ctaState = await headerCta.evaluate(element => ({
+    transform: getComputedStyle(element).transform,
+    shadow: getComputedStyle(element).boxShadow,
+  }));
+  if (ctaState.transform === "none" || ctaState.shadow === restingShadow) failures.push("header: destaque do CTA não foi aplicado");
+  await headerPage.screenshot({ path: path.join(outputDir, "header-hover-1440.png") });
+  await headerPage.close();
 
   await browser.close();
   if (failures.length) {

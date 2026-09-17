@@ -118,55 +118,72 @@ function setupBooking() {
   const resultCopy = form.querySelector("[data-result-copy]");
   const status = form.querySelector("[data-form-status]");
   const progress = form.querySelector("[data-form-progress]");
-  const next = form.querySelector("[data-form-next]");
   const back = form.querySelector("[data-form-back]");
-  const copy = form.querySelector("[data-copy-request]");
+  const note = form.querySelector("[data-contact-note]");
+  const send = form.querySelector("[data-whatsapp-send]");
   let current = 0;
-  let message = "";
+  let advanceTimer;
 
   const show = index => {
     steps.forEach((step, position) => step.classList.toggle("is-active", position === index));
     result.classList.toggle("is-active", index === steps.length);
     back.hidden = index === 0;
-    next.hidden = index === steps.length;
     progress.style.width = `${((index + 1) / (steps.length + 1)) * 100}%`;
     status.textContent = "";
     (index === steps.length ? result : steps[index]).focus?.({ preventScroll: true });
   };
 
   const selectedValue = name => form.elements[name].value;
-  const currentIsValid = () => Boolean(steps[current].querySelector("input:checked"));
+  const buildMessage = () => {
+    const extra = note.value.trim();
+    const base = `Olá, gostaria de informações sobre atendimento para ${selectedValue("publico")}. Tenho preferência por atendimento ${selectedValue("modalidade")} e disponibilidade no período da ${selectedValue("periodo")}.`;
+    return extra ? `${base}\n\nInformação adicional: ${extra}` : base;
+  };
 
-  next.addEventListener("click", () => {
-    if (!currentIsValid()) {
-      status.textContent = "Escolha uma opção para continuar.";
-      steps[current].querySelector("input")?.focus();
-      return;
-    }
-    current += 1;
-    if (current === steps.length) {
-      message = `Olá, gostaria de informações sobre atendimento para ${selectedValue("publico")}. Tenho preferência por atendimento ${selectedValue("modalidade")} e disponibilidade no período da ${selectedValue("periodo")}.`;
-      resultCopy.textContent = message;
-    }
-    show(current);
+  const updateMessage = () => {
+    resultCopy.textContent = buildMessage();
+  };
+
+  const scheduleAdvance = input => {
+    const stepIndex = steps.indexOf(input.closest("[data-form-step]"));
+    if (stepIndex !== current) return;
+    clearTimeout(advanceTimer);
+    advanceTimer = setTimeout(() => {
+      current += 1;
+      if (current === steps.length) updateMessage();
+      show(current);
+    }, 180);
+  };
+
+  form.addEventListener("click", event => {
+    const input = event.target.closest('input[type="radio"]');
+    if (input) scheduleAdvance(input);
+  });
+
+  form.addEventListener("change", event => {
+    if (event.target.matches('input[type="radio"]')) scheduleAdvance(event.target);
   });
 
   back.addEventListener("click", () => {
+    clearTimeout(advanceTimer);
     current = Math.max(0, current - 1);
     show(current);
   });
 
-  copy.addEventListener("click", async () => {
+  note.addEventListener("input", updateMessage);
+
+  send.addEventListener("click", async () => {
+    const message = buildMessage();
     try {
       await navigator.clipboard.writeText(message);
-      status.textContent = "Mensagem copiada. O contato poderá ser concluído quando o WhatsApp profissional for adicionado.";
+      status.textContent = "Mensagem copiada. Cole e revise o texto no WhatsApp antes de enviar.";
     } catch {
       const selection = getSelection();
       const range = document.createRange();
       range.selectNodeContents(resultCopy);
       selection.removeAllRanges();
       selection.addRange(range);
-      status.textContent = "Selecione e copie a mensagem destacada.";
+      status.textContent = "Copie a mensagem destacada e cole no WhatsApp.";
     }
   });
 

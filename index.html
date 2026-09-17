@@ -174,7 +174,7 @@
         <div class="container faq-layout">
           <div class="reveal"><p class="eyebrow">Perguntas frequentes</p><h2>Antes de começar.</h2></div>
           <div class="faq-list">
-            <details class="reveal"><summary>Como funciona o primeiro contato?</summary><p>Você informa suas preferências de modalidade e período. Nenhum relato clínico é solicitado pelo site.</p></details>
+            <details class="reveal"><summary>Como funciona o primeiro contato?</summary><p>Você informa preferências de modalidade e período e, se quiser, acrescenta uma informação prática. O site orienta a não incluir diagnóstico ou detalhes clínicos.</p></details>
             <details class="reveal"><summary>O atendimento pode ser on-line?</summary><p>Sim. Rafael oferece atendimento presencial e on-line, conforme disponibilidade e adequação.</p></details>
             <details class="reveal"><summary>Quem pode ser atendido?</summary><p>O atendimento é voltado a adolescentes, adultos e casais.</p></details>
             <details class="reveal"><summary>Este site atende emergências?</summary><p>Não. Em risco imediato ou emergência, procure o serviço de emergência da sua região.</p></details>
@@ -187,7 +187,7 @@
           <div class="booking-copy reveal">
             <p class="eyebrow eyebrow-light">Agendamento</p>
             <h2>Vamos conversar?</h2>
-            <p>Responda três questões práticas. As escolhas ficam somente neste navegador, não são armazenadas e não incluem informações clínicas.</p>
+            <p>Escolha três preferências práticas. Cada seleção avança automaticamente e nada é armazenado pelo site.</p>
           </div>
 
           <form class="booking-form reveal" data-booking-form novalidate>
@@ -212,15 +212,20 @@
               <label><input type="radio" name="periodo" value="flexível"><span>Flexível</span></label>
             </fieldset>
             <section class="form-result" data-form-result tabindex="-1" aria-labelledby="result-title">
-              <h3 id="result-title">Resumo do contato</h3>
-              <p data-result-copy></p>
-              <button class="button button-light" type="button" data-copy-request>Copiar mensagem</button>
-              <p class="form-note">O WhatsApp profissional será conectado após Rafael confirmar o número de contato.</p>
+              <h3 id="result-title">Antes de enviar</h3>
+              <label class="field-label" for="contact-note">Quer acrescentar algo? <span>Opcional</span></label>
+              <textarea id="contact-note" name="mensagem" maxlength="500" rows="5" data-contact-note placeholder="Conte brevemente o que considera importante para este primeiro contato."></textarea>
+              <p class="form-note">Evite informar diagnóstico, medicação, documentos ou detalhes íntimos. Este canal não atende emergências.</p>
+              <div class="message-preview" aria-label="Prévia da mensagem">
+                <strong>Sua mensagem</strong>
+                <p data-result-copy></p>
+              </div>
+              <a class="button button-light" href="https://wa.me/551798121449" target="_blank" rel="noopener noreferrer" referrerpolicy="no-referrer" data-whatsapp-send>Enviar pelo WhatsApp</a>
+              <p class="form-note">Ao continuar, a mensagem será copiada e o WhatsApp será aberto. Revise e cole o texto no chat antes de enviá-lo.</p>
             </section>
             <p class="form-status" data-form-status role="status" aria-live="polite"></p>
             <div class="form-actions">
-              <button class="text-button" type="button" data-form-back>Voltar</button>
-              <button class="button button-light" type="button" data-form-next>Continuar</button>
+              <button class="text-button back-button" type="button" data-form-back><span aria-hidden="true">←</span> Voltar</button>
             </div>
           </form>
         </div>
@@ -236,7 +241,7 @@
           <a href="#artigos">Artigos</a>
           <details class="privacy-details" id="privacidade">
             <summary>Privacidade e LGPD</summary>
-            <p>Este site não usa cookies, analytics ou armazenamento das respostas do agendamento. As escolhas permanecem localmente apenas durante o preenchimento. Solicitações sobre dados deverão usar o canal profissional quando ele for disponibilizado.</p>
+            <p>Este site não usa cookies, analytics ou armazenamento das respostas. A mensagem permanece apenas nesta página e na área de transferência após sua ação. Ao colar ou enviar no WhatsApp, os dados passam a ser tratados também por essa plataforma. Solicitações sobre dados deverão usar o canal profissional quando ele for disponibilizado.</p>
           </details>
         </div>
       </div>

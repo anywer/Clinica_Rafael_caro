@@ -12,8 +12,8 @@
 | Código | Aprovado | HTML/CSS/JS nativos, sem dependências de produção, sem duplicação funcional crítica e sintaxe JavaScript válida. |
 | Responsividade | Aprovado | 320, 375, 768, 1024, 1440 e o caso largo/baixo de 1874×856 sem overflow ou sobreposição. |
 | Acessibilidade | Aprovado | Semântica, foco, teclado, link de salto, estados ARIA e movimento reduzido. |
-| Performance | Aprovado | Imagens WebP responsivas — incluindo retrato em 560, 900 e 1120 px —, JavaScript pequeno, observadores nativos e rolagem limitada por `requestAnimationFrame`. |
-| Segurança e LGPD | Aprovado com pendências externas | Minimização e ausência de persistência/rastreio; falta definir WhatsApp e canal de privacidade antes da publicação. |
+| Performance | Aprovado | Imagens WebP responsivas, JavaScript pequeno, observadores nativos e microinterações do header restritas a `transform`, opacidade, cor e sombra, com redução de movimento. |
+| Segurança e LGPD | Aprovado para protótipo local, com pendências de publicação | Sem persistência/rastreio e sem relato na URL; número é provisório e o campo opcional/WhatsApp exigem validação profissional-jurídica e canal de privacidade. |
 
 ## Comandos executados
 
@@ -24,4 +24,4 @@ Resultado final automatizado: `PASS: responsividade básica, console, menu e flu
 
 ## Observações para publicação
 
-Confirmar número profissional, canal de privacidade, textos e registro com Rafael. Repetir a CSP como cabeçalho HTTP na hospedagem e fazer uma verificação rápida em Safari/iOS real.
+Confirmar número profissional, necessidade/base jurídica do texto opcional, tratamento no WhatsApp, canal de privacidade, textos e registro com Rafael. Repetir a CSP como cabeçalho HTTP na hospedagem e fazer uma verificação rápida em Safari/iOS real.
