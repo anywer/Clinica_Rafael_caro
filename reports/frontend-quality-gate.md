@@ -49,3 +49,12 @@ Resultado da verificação: nenhum achado bloqueador ou importante.
 - Sem alteração de semântica: `<details>` e `<summary>` preservam teclado e estado acessível.
 - Regressão automatizada aprovada entre 320×720 e 1874×856, sem overflow, erro de console ou quebra dos fluxos existentes.
 - Mudança restrita ao CSS, sem impacto no tratamento de dados ou em integrações.
+
+## Verificação rápida — mascaramento para prévia pública (17/09/2026)
+
+Resultado: **Aprovado com observações**.
+
+- Escopo visual restrito a três linhas de identificação profissional; estrutura, estilos e interações permanecem inalterados.
+- O registro aparece como `CRP XXXXXX/XX` no cabeçalho, retrato e rodapé.
+- A suíte automatizada e a sintaxe JavaScript foram reexecutadas após a mudança.
+- Observação de publicação: usar um repositório sanitizado e sem histórico, pois documentos visuais e commits antigos não são apagados pela simples alteração do HTML atual.

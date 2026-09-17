@@ -16,7 +16,7 @@ O mockup oficial para implementação é:
 - cabeçalho branco com borda inferior curva da V3;
 - monograma RC aberto, integrado à curva do cabeçalho;
 - no celular, RC aberto à esquerda e menu à direita;
-- registro exibido como `CRP 124528/06`, sujeito à confirmação final de Rafael.
+- registro exibido como `CRP XXXXXX/XX` até a confirmação final de Rafael.
 
 ## Regra de implementação
 

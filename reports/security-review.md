@@ -56,3 +56,16 @@ Conclusão desta alteração: nenhum novo risco de segurança ou LGPD identifica
 ## Atualização — apresentação do aviso de privacidade (17/09/2026)
 
 A alteração remove apenas o marcador visual nativo e padroniza os links do rodapé. O controle continua sendo um `<details>` semântico, operável por teclado e com estado expandido/recolhido exposto às tecnologias assistivas. O texto, o fluxo de dados, os terceiros e as pendências LGPD permanecem inalterados.
+
+## Atualização — preparação para prévia pública (17/09/2026)
+
+Escopo: mascaramento do registro profissional na interface e nos documentos textuais do estado atual do projeto.
+
+- O valor exibido do CRP foi substituído por `XXXXXX/XX` no cabeçalho, retrato e rodapé.
+- As referências textuais internas no estado atual também foram mascaradas.
+- O número original ainda pode existir no histórico Git e estar visível dentro de mockups ou capturas antigas. Por isso, este repositório completo não deve ser tornado público para testes.
+- A prévia pública deve ser criada em um repositório novo, sem histórico, contendo somente `index.html`, `styles.css`, `script.js` e os assets efetivamente usados pela página.
+- Nome, retrato, endereço e WhatsApp continuam sendo dados pessoais/publicitários visíveis. A publicação depende de confirmação expressa do profissional e da substituição do telefone provisório.
+- O campo livre e a integração com WhatsApp mantêm as pendências jurídicas e operacionais já registradas. Esta alteração não autoriza alegar conformidade integral com a LGPD.
+
+Estado: adequado para uma prévia pública sanitizada, desde que ela não use este histórico Git nem inclua documentos, relatórios, mockups ou capturas internas.

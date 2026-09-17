@@ -49,4 +49,4 @@ Usar o arquivo tratado sem alterar novamente rosto, barba, cabelo, sorriso ou pr
 
 ## Controle de conteúdo
 
-O registro correto é `CRP 124528/06`, sujeito à confirmação final de Rafael sobre a forma pública. Textos pequenos do mockup são indicativos e não substituem o conteúdo revisado.
+O registro público permanece mascarado como `CRP XXXXXX/XX` até a confirmação final de Rafael sobre a forma de exibição. Textos pequenos do mockup são indicativos e não substituem o conteúdo revisado.

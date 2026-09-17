@@ -23,6 +23,6 @@ Avoid: removing the leaves, replacing translucent circles, changing the RC mark,
 
 ```text
 Use case: text-localization
-Primary request: correct the professional credential line in every visible desktop header so it reads exactly "Psicólogo • CRP 124528/06"
-Constraints: change only the incorrect CRP credential text; preserve every other design and portrait element; render the digits 1-2-4-5-2-8 slash 0-6 exactly.
+Primary request: keep the professional credential line masked in every visible desktop header so it reads exactly "Psicólogo • CRP XXXXXX/XX"
+Constraints: change only the CRP credential text; preserve every other design and portrait element; render the placeholder XXXXXX/XX exactly.
 ```

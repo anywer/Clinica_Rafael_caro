@@ -15,7 +15,7 @@ A página não deve diagnosticar, prometer resultados nem substituir atendimento
 ## 2. Informações já fornecidas
 
 - **Nome:** Rafael Caminha Caro
-- **Registro informado:** CRP 124528/06 — confirmar a grafia/formatação pública antes de publicar
+- **Registro público:** CRP XXXXXX/XX — confirmar a grafia/formatação antes da publicação oficial
 - **Públicos:** adolescentes, adultos e casais
 - **Abordagem:** psicoterapia de base Gestalt-terapia
 - **Modalidades:** presencial e on-line
