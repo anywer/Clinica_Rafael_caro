@@ -40,3 +40,15 @@ O formulário não pede nome, telefone, e-mail, diagnóstico, sintomas, históri
 4. No servidor de produção, repetir CSP e políticas de segurança como cabeçalhos HTTP.
 
 Risco residual atual: moderado para publicação devido ao texto livre e ao terceiro WhatsApp; aceitável apenas como protótipo local até as decisões acima. Não há alegação de conformidade jurídica.
+
+## Atualização — narrativa de movimento (17/09/2026)
+
+A alteração é estritamente visual e não modifica o fluxo de dados. O controlador de scroll usa apenas posição e dimensões da própria página em memória; não cria identificadores, logs, cookies, armazenamento, telemetria, requisições ou integração com terceiros.
+
+- Nenhuma dependência externa ou script de fornecedor foi adicionado.
+- A CSP existente permanece restritiva (`connect-src 'none'`).
+- Nenhum dado do questionário participa das animações.
+- Preferência de movimento reduzido é consultada localmente por `matchMedia` e não é armazenada.
+- As pendências de publicação já registradas — número provisório, campo livre, WhatsApp, canal do titular e validação profissional/jurídica — permanecem inalteradas.
+
+Conclusão desta alteração: nenhum novo risco de segurança ou LGPD identificado. O risco residual do protótipo continua moderado pelos motivos anteriores, não pela animação.

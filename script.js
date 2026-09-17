@@ -95,18 +95,83 @@ function setupJourneyLine() {
   update();
 }
 
-function setupSteps() {
-  const steps = [...document.querySelectorAll("[data-step]")];
-  if (!steps.length || !("IntersectionObserver" in window)) return;
-  const observer = new IntersectionObserver(entries => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        steps.forEach(step => step.classList.remove("is-current"));
-        entry.target.classList.add("is-current");
-      }
+function setupScrollScenes() {
+  const scenes = [...document.querySelectorAll("[data-scroll-scene]")];
+  const desktop = window.matchMedia("(min-width: 901px)");
+  if (!scenes.length) return;
+
+  const sceneStates = scenes.map(scene => ({
+    scene,
+    steps: scene.dataset.scrollScene === "process" ? [...scene.querySelectorAll("[data-step]")] : [],
+  }));
+  const clamp = value => Math.min(Math.max(value, 0), 1);
+  let scheduled = false;
+  let currentPhase = -1;
+  let scenesEnabled;
+
+  const reset = () => {
+    sceneStates.forEach(({ scene, steps }) => {
+      scene.classList.remove("is-motion-active");
+      scene.style.setProperty("--scene-progress", "0");
+      scene.style.setProperty("--step-progress", "0");
+      steps.forEach(step => {
+        step.classList.remove("is-current", "is-complete");
+        step.removeAttribute("aria-current");
+      });
     });
-  }, { threshold: 0.65 });
-  steps.forEach(step => observer.observe(step));
+    currentPhase = -1;
+  };
+
+  const update = () => {
+    scheduled = false;
+    if (!desktop.matches || reducedMotion.matches) {
+      if (scenesEnabled !== false) reset();
+      scenesEnabled = false;
+      return;
+    }
+    scenesEnabled = true;
+
+    const frames = sceneStates.map(({ scene, steps }) => {
+      const rect = scene.getBoundingClientRect();
+      const distance = Math.max(scene.offsetHeight - innerHeight, 1);
+      const progress = clamp(-rect.top / distance);
+      const phase = steps.length ? Math.min(Math.floor(progress * steps.length), steps.length - 1) : -1;
+      return { scene, steps, progress, phase, active: rect.top < innerHeight && rect.bottom > 0 };
+    });
+
+    frames.forEach(({ scene, steps, progress, phase, active }) => {
+      const value = progress.toFixed(4);
+      scene.classList.toggle("is-motion-active", active);
+      scene.style.setProperty("--scene-progress", value);
+
+      if (!steps.length) return;
+      scene.style.setProperty("--step-progress", value);
+
+      if (phase === currentPhase) return;
+      currentPhase = phase;
+      steps.forEach((step, index) => {
+        const current = index === phase;
+        step.classList.toggle("is-current", current);
+        step.classList.toggle("is-complete", index < phase);
+        if (current) step.setAttribute("aria-current", "step");
+        else step.removeAttribute("aria-current");
+      });
+    });
+  };
+
+  const schedule = () => {
+    if (scheduled) return;
+    scheduled = true;
+    requestAnimationFrame(update);
+  };
+
+  addEventListener("scroll", schedule, { passive: true });
+  addEventListener("resize", schedule);
+  [desktop, reducedMotion].forEach(query => {
+    if (query.addEventListener) query.addEventListener("change", schedule);
+    else query.addListener(schedule);
+  });
+  update();
 }
 
 function setupBooking() {
@@ -194,5 +259,5 @@ document.querySelector("[data-year]").textContent = new Date().getFullYear();
 setupMenu();
 setupReveals();
 setupJourneyLine();
-setupSteps();
+setupScrollScenes();
 setupBooking();

@@ -80,6 +80,15 @@ const sizes = [
     }));
     if (portraitState.objectFit !== "contain") failures.push(`${size.name}: retrato não preserva o enquadramento integral`);
     if (portraitState.naturalWidth + 1 < portraitState.renderedWidth) failures.push(`${size.name}: retrato ampliado além da resolução natural (${portraitState.naturalWidth}/${portraitState.renderedWidth.toFixed(1)})`);
+    if (size.width <= 900) {
+      const mobileMotionState = await page.locator("#processo").evaluate(section => ({
+        layoutPosition: getComputedStyle(section.querySelector(".process-layout")).position,
+        stepOpacities: [...section.querySelectorAll("[data-step]")].map(step => getComputedStyle(step).opacity),
+      }));
+      if (mobileMotionState.layoutPosition === "sticky" || mobileMotionState.stepOpacities.some(opacity => opacity !== "1")) {
+        failures.push(`${size.name}: cena móvel não retornou ao fluxo legível`);
+      }
+    }
 
     if (size.name === "mobile-375") {
       await page.screenshot({ path: path.join(outputDir, "viewport-mobile-top.png") });
@@ -128,12 +137,20 @@ const sizes = [
   if ((await page.locator("[data-form-next]").count()) !== 0) failures.push("agendamento: botão Continuar ainda existe");
   await page.screenshot({ path: path.join(outputDir, "booking-result-375.png") });
 
-  const reducedPage = await browser.newPage({ viewport: { width: 375, height: 812 }, reducedMotion: "reduce" });
+  const reducedPage = await browser.newPage({ viewport: { width: 1440, height: 900 }, reducedMotion: "reduce" });
   await reducedPage.goto(baseUrl, { waitUntil: "networkidle" });
   const hiddenWithReducedMotion = await reducedPage.locator(".reveal").evaluateAll(items =>
     items.filter(item => getComputedStyle(item).opacity !== "1").length
   );
   if (hiddenWithReducedMotion) failures.push("movimento reduzido: conteúdo ficou oculto");
+  const reducedScene = await reducedPage.locator("#processo").evaluate(section => ({
+    height: section.offsetHeight,
+    layoutPosition: getComputedStyle(section.querySelector(".process-layout")).position,
+    stepOpacities: [...section.querySelectorAll("[data-step]")].map(step => getComputedStyle(step).opacity),
+  }));
+  if (reducedScene.height > 1800 || reducedScene.layoutPosition === "sticky" || reducedScene.stepOpacities.some(opacity => opacity !== "1")) {
+    failures.push("movimento reduzido: cena permaneceu fixada, longa ou esmaecida");
+  }
   await reducedPage.close();
 
   const headerPage = await browser.newPage({ viewport: { width: 1440, height: 900 } });
@@ -158,6 +175,34 @@ const sizes = [
   if (ctaState.transform === "none" || ctaState.shadow === restingShadow) failures.push("header: destaque do CTA não foi aplicado");
   await headerPage.screenshot({ path: path.join(outputDir, "header-hover-1440.png") });
   await headerPage.close();
+
+  const motionPage = await browser.newPage({ viewport: { width: 1440, height: 900 } });
+  await motionPage.goto(baseUrl, { waitUntil: "networkidle" });
+  const processMetrics = await motionPage.locator("#processo").evaluate(section => ({
+    top: section.offsetTop,
+    distance: section.offsetHeight - innerHeight,
+  }));
+  for (const [progress, expectedPhase] of [[0.1, 0], [0.5, 1], [0.9, 2]]) {
+    await motionPage.evaluate(y => scrollTo(0, y), processMetrics.top + processMetrics.distance * progress);
+    await motionPage.waitForTimeout(100);
+    const currentPhase = await motionPage.locator("[data-step]").evaluateAll(steps =>
+      steps.findIndex(step => step.classList.contains("is-current"))
+    );
+    if (currentPhase !== expectedPhase) failures.push(`movimento: fase ${expectedPhase + 1} não acompanhou o scroll em ${progress * 100}%`);
+  }
+
+  const aboutMetrics = await motionPage.locator("#sobre").evaluate(section => ({
+    top: section.offsetTop,
+    distance: section.offsetHeight - innerHeight,
+  }));
+  const portraitTops = [];
+  for (const progress of [0.25, 0.65]) {
+    await motionPage.evaluate(y => scrollTo(0, y), aboutMetrics.top + aboutMetrics.distance * progress);
+    await motionPage.waitForTimeout(100);
+    portraitTops.push(await motionPage.locator(".portrait").evaluate(portrait => portrait.getBoundingClientRect().top));
+  }
+  if (Math.abs(portraitTops[0] - portraitTops[1]) > 2) failures.push("movimento: retrato não permaneceu estável durante a cena Sobre");
+  await motionPage.close();
 
   await browser.close();
   if (failures.length) {

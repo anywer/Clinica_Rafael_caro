@@ -25,3 +25,18 @@ Resultado final automatizado: `PASS: responsividade básica, console, menu e flu
 ## Observações para publicação
 
 Confirmar número profissional, necessidade/base jurídica do texto opcional, tratamento no WhatsApp, canal de privacidade, textos e registro com Rafael. Repetir a CSP como cabeçalho HTTP na hospedagem e fazer uma verificação rápida em Safari/iOS real.
+
+## Reavaliação — narrativa de movimento (17/09/2026)
+
+**Aprovado com observações**
+
+| Área | Status | Evidência |
+| --- | --- | --- |
+| Requisito | Aprovado | Retrato com sticky breve em desktop, processo com três fases ligadas ao scroll e revelações discretas preservadas no restante da página. |
+| Fluidez e performance | Aprovado | Um controlador com scroll passivo e escrita agrupada em `requestAnimationFrame`; animações limitadas a `transform` e `opacity`; `will-change` apenas enquanto a cena está no viewport. |
+| Responsividade | Aprovado | Cenas desativadas até 900 px; fluxo vertical validado nas larguras móveis e tablet. |
+| Acessibilidade | Aprovado | Ordem e conteúdo do DOM inalterados, fase atual indicada por `aria-current` e alternativa completa para `prefers-reduced-motion`. |
+| Robustez | Aprovado | Sem biblioteca externa; conteúdo permanece legível sem JavaScript; regressão automatizada inclui fases do processo e estabilidade do retrato. |
+| Segurança e LGPD | Sem novo risco | Movimento não lê nem persiste dados pessoais e não adiciona terceiros ou rede. Pendências de publicação anteriores continuam válidas. |
+
+Observação: conferir Safari/iOS em dispositivo real antes da publicação. Isso não bloqueia o protótipo local nem a avaliação desta branch.
