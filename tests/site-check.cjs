@@ -107,6 +107,22 @@ const sizes = [
     if ((await page.locator("h1").count()) !== 1) failures.push(`${size.name}: deve haver exatamente um h1`);
     const brokenImages = await page.locator("img").evaluateAll(images => images.filter(image => !image.complete || image.naturalWidth === 0).length);
     if (brokenImages) failures.push(`${size.name}: ${brokenImages} imagem(ns) não carregada(s)`);
+    const quickContactState = await page.locator(".quick-contact").evaluate(link => {
+      const bounds = link.getBoundingClientRect();
+      const image = link.querySelector("img");
+      return {
+        href: link.getAttribute("href"),
+        position: getComputedStyle(link).position,
+        width: bounds.width,
+        height: bounds.height,
+        insideViewport: bounds.left >= 0 && bounds.top >= 0 && bounds.right <= innerWidth && bounds.bottom <= innerHeight,
+        imageLoaded: image.complete && image.naturalWidth > 0,
+      };
+    });
+    if (quickContactState.href !== "#agendamento") failures.push(`${size.name}: atalho rápido não aponta para o agendamento`);
+    if (quickContactState.position !== "fixed" || !quickContactState.insideViewport) failures.push(`${size.name}: atalho rápido não permanece visível na janela`);
+    if (quickContactState.width < 44 || quickContactState.height < 44) failures.push(`${size.name}: alvo de toque do atalho rápido é menor que 44 px`);
+    if (!quickContactState.imageLoaded) failures.push(`${size.name}: ícone do atalho rápido não carregou`);
     const portraitState = await page.locator(".portrait img").evaluate(image => ({
       naturalWidth: image.naturalWidth,
       renderedWidth: image.getBoundingClientRect().width,
@@ -133,6 +149,9 @@ const sizes = [
       await page.locator("#agendamento").scrollIntoViewIfNeeded();
       await page.waitForTimeout(250);
       await page.screenshot({ path: path.join(outputDir, "viewport-mobile-booking.png") });
+      await page.locator(".site-footer").scrollIntoViewIfNeeded();
+      await page.waitForTimeout(250);
+      await page.screenshot({ path: path.join(outputDir, "viewport-mobile-footer.png") });
     }
     if (size.name === "wide-short-1874") {
       await page.screenshot({ path: path.join(outputDir, "viewport-wide-short-top.png") });
@@ -154,7 +173,9 @@ const sizes = [
   await page.keyboard.press("Escape");
   if ((await menu.getAttribute("aria-expanded")) !== "false") failures.push("menu: Escape não fechou");
 
-  await page.locator("#agendamento").scrollIntoViewIfNeeded();
+  await page.locator(".quick-contact").click();
+  await page.waitForTimeout(650);
+  if (new URL(page.url()).hash !== "#agendamento") failures.push("atalho rápido: clique não abriu a seção de agendamento");
   await page.locator('input[name="publico"][value="adulto"]').check();
   await page.waitForTimeout(250);
   if (!(await page.locator('[data-form-step]:nth-of-type(2)').isVisible())) failures.push("agendamento: não avançou automaticamente para modalidade");
@@ -211,6 +232,18 @@ const sizes = [
     shadow: getComputedStyle(element).boxShadow,
   }));
   if (ctaState.transform === "none" || ctaState.shadow === restingShadow) failures.push("header: destaque do CTA não foi aplicado");
+  const quickContact = headerPage.locator(".quick-contact");
+  const quickContactRestingShadow = await quickContact.evaluate(element => getComputedStyle(element).boxShadow);
+  await quickContact.hover();
+  await headerPage.waitForTimeout(500);
+  const quickContactHoverState = await quickContact.evaluate(element => ({
+    transform: getComputedStyle(element).transform,
+    shadow: getComputedStyle(element).boxShadow,
+    labelOpacity: getComputedStyle(element.querySelector(".quick-contact-label")).opacity,
+  }));
+  if (quickContactHoverState.transform === "none" || quickContactHoverState.shadow === quickContactRestingShadow || quickContactHoverState.labelOpacity !== "1") {
+    failures.push("atalho rápido: hover de computador não foi aplicado");
+  }
   await headerPage.screenshot({ path: path.join(outputDir, "header-hover-1440.png") });
   await headerPage.close();
 

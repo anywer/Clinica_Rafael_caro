@@ -69,3 +69,14 @@ Resultado: **Aprovado com observações**.
 - Acessibilidade: conteúdo e ordem do DOM foram preservados; texto não depende das imagens e a preferência de movimento reduzido continua coberta.
 - Performance: mantém WebP responsivo e carregamento tardio do retrato; nenhuma dependência ou script foi adicionado.
 - Limitação: as capturas reais confirmam a falha original, mas o mesmo aparelho Android não pôde ser retestado diretamente neste ambiente. A correção foi validada no Chrome headless e deve receber uma conferência curta no aparelho após a próxima publicação.
+
+## Auditoria padrão — atalho flutuante de conversa (18/09/2026)
+
+Resultado: **Aprovado com observações**.
+
+- Requisito: atalho permanece no canto inferior direito e direciona internamente para “Vamos conversar?”, sem iniciar contato externo antes das escolhas do usuário.
+- Responsividade: 56 px no desktop e 52 px no mobile, respeitando áreas seguras; validado de 320×720 a 1874×856 e em densidade 3×.
+- Interação: hover e foco exibem elevação, mudança sutil de cor, sombra e rótulo; no touch o controle continua compacto e não depende de hover.
+- Acessibilidade: nome acessível explícito, alvo maior que 44 px, foco visível e redução de movimento preservada.
+- Performance e manutenção: reutiliza o PNG local em tamanho inferior ao natural, sem biblioteca, JavaScript ou requisição externa adicional.
+- Observação: ainda é recomendável conferir o espaçamento em Safari/iOS e no aparelho Android usado nas capturas anteriores após a publicação.

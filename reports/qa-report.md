@@ -67,3 +67,11 @@ Evidência inicial: duas capturas fornecidas pelo usuário em navegador móvel A
 | QA-15 | Bloqueador | O `srcset` solicitava `rafael-1120.webp`, mas o asset estava salvo como `rafael-1120,.webp`. Telas de alta densidade selecionavam a URL inexistente e exibiam a moldura vazia com o texto alternativo. | Asset renomeado para a URL declarada; `sizes` refinado e fallback mantido. | HTTP 200 no asset; imagem íntegra em 375×812 com densidade 3× e seleção confirmada da versão de 1120 px. |
 
 Regressão adicional: sintaxe JavaScript, ausência de overflow, imagens quebradas, erros de console, menu, agendamento, cenas de scroll, movimento reduzido e viewports de 320 a 1874 px. Capturas em `reports/screenshots/mobile-fix-2026-09-17/`.
+
+## Atualização — atalho rápido para conversa (18/09/2026)
+
+| ID | Severidade | Achado | Correção | Regressão |
+| --- | --- | --- | --- | --- |
+| QA-16 | Refinamento | Pessoas com pressa precisavam percorrer a página ou abrir o menu para encontrar o início do contato. | Ícone fornecido foi aplicado como atalho flutuante para `#agendamento`, com 56 px no desktop, 52 px no mobile, área de toque superior a 44 px, rótulo no hover/foco e ocultação enquanto o menu móvel está aberto. | Aprovada em oito configurações entre 320 e 1874 px, incluindo densidade 3×; ícone carregado, dentro da viewport, sem overflow e com destino validado por clique. |
+
+Capturas desta rodada estão em `reports/screenshots/quick-contact-2026-09-18/`, incluindo topo, formulário e rodapé no viewport móvel e estado de hover no desktop.

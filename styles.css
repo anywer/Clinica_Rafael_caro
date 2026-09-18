@@ -208,6 +208,18 @@ p { max-width: 62ch; }
 .back-button span { font-size: 1.25rem; transition: transform .2s ease; }
 .back-button:hover span { transform: translateX(-3px); }
 
+.quick-contact { position: fixed; z-index: 45; right: max(1.25rem, env(safe-area-inset-right)); bottom: max(1.25rem, env(safe-area-inset-bottom)); display: grid; width: 3.5rem; height: 3.5rem; place-items: center; color: var(--white); background: var(--deep); border: 1px solid rgb(255 255 255 / 55%); border-radius: 50%; box-shadow: 0 9px 24px rgb(23 59 82 / 24%); text-decoration: none; transition: background-color .4s ease, box-shadow .45s var(--ease), transform .45s var(--ease); }
+.quick-contact img { width: 1.8rem; height: 1.8rem; object-fit: contain; filter: brightness(0) invert(1); }
+.quick-contact-label { position: absolute; right: calc(100% + .7rem); width: max-content; padding: .45rem .7rem; color: var(--deep); background: rgb(255 255 255 / 96%); border: 1px solid var(--line); border-radius: .35rem; box-shadow: 0 8px 22px rgb(23 59 82 / 12%); font-size: .78rem; font-weight: 700; opacity: 0; pointer-events: none; transform: translateX(.5rem); transition: opacity .3s ease, transform .4s var(--ease); }
+.quick-contact:focus-visible { background: #286887; box-shadow: 0 15px 34px rgb(23 59 82 / 30%); transform: translateY(-3px) scale(1.04); }
+.quick-contact:focus-visible .quick-contact-label { opacity: 1; transform: none; }
+.menu-open .quick-contact { opacity: 0; pointer-events: none; }
+
+@media (hover: hover) and (pointer: fine) {
+  .quick-contact:hover { background: #286887; box-shadow: 0 15px 34px rgb(23 59 82 / 30%); transform: translateY(-4px) scale(1.06); }
+  .quick-contact:hover .quick-contact-label { opacity: 1; transform: none; }
+}
+
 .site-footer { padding: 5rem 0 2rem; color: var(--white); background: #0e2939; }
 .footer-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 3rem; }
 .footer-brand { display: grid; width: 64px; height: 54px; place-items: center; margin-bottom: 1rem; background: var(--white); border-radius: 0 0 48% 48%; text-decoration: none; }
@@ -293,6 +305,9 @@ p { max-width: 62ch; }
   .footer-grid { grid-template-columns: 1fr; }
   .footer-links { grid-column: auto; }
   .footer-bottom { flex-direction: column; }
+  .quick-contact { right: max(.75rem, env(safe-area-inset-right)); bottom: max(.75rem, env(safe-area-inset-bottom)); width: 3.25rem; height: 3.25rem; }
+  .quick-contact img { width: 1.65rem; height: 1.65rem; }
+  .quick-contact-label { display: none; }
 }
 
 @media (prefers-reduced-motion: reduce) {
