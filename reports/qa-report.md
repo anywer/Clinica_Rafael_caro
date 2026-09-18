@@ -56,3 +56,14 @@ Resultado: `PASS` na suíte automatizada e na inspeção visual local.
 | QA-11 | Importante | O destaque dos passos precisava corresponder ao avanço real da cena, não apenas à entrada conjunta dos itens no viewport. | Observador dos itens substituído por um controlador único em `requestAnimationFrame`, com três fases e trilho de progresso. | Aprovada em 10%, 50% e 90% da cena. |
 | QA-12 | Importante | A regra de opacidade do modo animado tinha maior especificidade e poderia manter os passos esmaecidos no mobile e com movimento reduzido. | Regras alternativas receberam especificidade equivalente; a suíte agora valida posição e opacidade computadas nesses modos. | Aprovada em 320, 375, 768 px e movimento reduzido a 1440 px. |
 | QA-13 | Refinamento | O marcador triangular de “Privacidade e LGPD” destoava de “Agendamento” e “Artigos”, e os links tinham peso visual excessivo. | Marcador nativo removido; os três itens receberam tipografia, cor e espaçamento compactos e consistentes. O texto expandido permanece abaixo do título. | Aprovada nos estados aberto/fechado, por teclado e na regressão de 320 a 1874 px. |
+
+## Atualização — correção móvel em dispositivo real (17/09/2026)
+
+Evidência inicial: duas capturas fornecidas pelo usuário em navegador móvel Android. O modelo do aparelho e a versão do navegador não foram informados.
+
+| ID | Severidade | Achado | Correção | Regressão |
+| --- | --- | --- | --- | --- |
+| QA-14 | Importante | No hero móvel, CTA, link secundário, nota lateral, frase final e folha ocupavam zonas absolutas concorrentes; o resultado era texto sobre imagem e frases sobrepostas durante a rolagem. | Abaixo de 900 px, o hero passou a usar altura e fluxo naturais. Nota, folha e frase final agora reservam seu próprio espaço; círculos permanecem apenas como fundo de baixa opacidade. | Aprovada em 320×720, 375×812 e 375×812 com densidade 3×; teste automático verifica ordem e interseções. |
+| QA-15 | Bloqueador | O `srcset` solicitava `rafael-1120.webp`, mas o asset estava salvo como `rafael-1120,.webp`. Telas de alta densidade selecionavam a URL inexistente e exibiam a moldura vazia com o texto alternativo. | Asset renomeado para a URL declarada; `sizes` refinado e fallback mantido. | HTTP 200 no asset; imagem íntegra em 375×812 com densidade 3× e seleção confirmada da versão de 1120 px. |
+
+Regressão adicional: sintaxe JavaScript, ausência de overflow, imagens quebradas, erros de console, menu, agendamento, cenas de scroll, movimento reduzido e viewports de 320 a 1874 px. Capturas em `reports/screenshots/mobile-fix-2026-09-17/`.

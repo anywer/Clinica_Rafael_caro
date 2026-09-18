@@ -9,6 +9,7 @@ fs.mkdirSync(outputDir, { recursive: true });
 const sizes = [
   { name: "mobile-320", width: 320, height: 720 },
   { name: "mobile-375", width: 375, height: 812 },
+  { name: "mobile-high-dpr-375", width: 375, height: 812, deviceScaleFactor: 3 },
   { name: "tablet-768", width: 768, height: 1024 },
   { name: "laptop-1024", width: 1024, height: 768 },
   { name: "reported-1115", width: 1115, height: 764 },
@@ -24,7 +25,10 @@ const sizes = [
   const failures = [];
 
   for (const size of sizes) {
-    const page = await browser.newPage({ viewport: size });
+    const page = await browser.newPage({
+      viewport: { width: size.width, height: size.height },
+      deviceScaleFactor: size.deviceScaleFactor || 1,
+    });
     const runtimeErrors = [];
     page.on("pageerror", error => runtimeErrors.push(error.message));
     page.on("console", message => {
@@ -61,6 +65,9 @@ const sizes = [
         await page.locator(`#${id}`).screenshot({ path: path.join(outputDir, `section-${id}.png`) });
       }
     }
+    if (size.name === "mobile-375") {
+      await page.locator("#inicio").screenshot({ path: path.join(outputDir, "section-hero-mobile-375.png") });
+    }
 
     const overflow = await page.evaluate(() => ({
       scrollWidth: document.documentElement.scrollWidth,
@@ -68,6 +75,33 @@ const sizes = [
     }));
     if (overflow.scrollWidth > overflow.clientWidth + 1) {
       failures.push(`${size.name}: overflow horizontal (${overflow.scrollWidth}/${overflow.clientWidth})`);
+    }
+    if (size.width <= 560) {
+      const mobileHero = await page.evaluate(() => {
+        const rect = selector => {
+          const bounds = document.querySelector(selector).getBoundingClientRect();
+          return { top: bounds.top, right: bounds.right, bottom: bounds.bottom, left: bounds.left };
+        };
+        const overlaps = (a, b) => a.left < b.right && a.right > b.left && a.top < b.bottom && a.bottom > b.top;
+        const actions = rect(".hero-actions");
+        const note = rect(".hero-note");
+        const leaves = rect(".leaf-window-hero");
+        const closing = rect(".hero-closing");
+        return {
+          actionsOnLeaves: overlaps(actions, leaves),
+          noteOnLeaves: overlaps(note, leaves),
+          closingOnLeaves: overlaps(closing, leaves),
+          noteAfterActions: note.top >= actions.bottom,
+          leavesAfterNote: leaves.top >= note.bottom,
+          closingAfterLeaves: closing.top >= leaves.bottom,
+        };
+      });
+      if (mobileHero.actionsOnLeaves || mobileHero.noteOnLeaves || mobileHero.closingOnLeaves) {
+        failures.push(`${size.name}: texto ou ação sobrepõe a imagem de folhas no hero`);
+      }
+      if (!mobileHero.noteAfterActions || !mobileHero.leavesAfterNote || !mobileHero.closingAfterLeaves) {
+        failures.push(`${size.name}: ordem visual do hero móvel está inconsistente`);
+      }
     }
     runtimeErrors.forEach(error => failures.push(`${size.name}: ${error}`));
     if ((await page.locator("h1").count()) !== 1) failures.push(`${size.name}: deve haver exatamente um h1`);
@@ -77,9 +111,13 @@ const sizes = [
       naturalWidth: image.naturalWidth,
       renderedWidth: image.getBoundingClientRect().width,
       objectFit: getComputedStyle(image).objectFit,
+      currentSrc: image.currentSrc,
     }));
     if (portraitState.objectFit !== "contain") failures.push(`${size.name}: retrato não preserva o enquadramento integral`);
     if (portraitState.naturalWidth + 1 < portraitState.renderedWidth) failures.push(`${size.name}: retrato ampliado além da resolução natural (${portraitState.naturalWidth}/${portraitState.renderedWidth.toFixed(1)})`);
+    if (size.name === "mobile-high-dpr-375" && !portraitState.currentSrc.endsWith("/assets/images/rafael-1120.webp")) {
+      failures.push(`${size.name}: retrato de alta densidade não selecionou o asset de 1120 px`);
+    }
     if (size.width <= 900) {
       const mobileMotionState = await page.locator("#processo").evaluate(section => ({
         layoutPosition: getComputedStyle(section.querySelector(".process-layout")).position,

@@ -58,3 +58,14 @@ Resultado: **Aprovado com observações**.
 - O registro aparece como `CRP XXXXXX/XX` no cabeçalho, retrato e rodapé.
 - A suíte automatizada e a sintaxe JavaScript foram reexecutadas após a mudança.
 - Observação de publicação: usar um repositório sanitizado e sem histórico, pois documentos visuais e commits antigos não são apagados pela simples alteração do HTML atual.
+
+## Auditoria padrão — legibilidade móvel e retrato responsivo (17/09/2026)
+
+Resultado: **Aprovado com observações**.
+
+- Funcionalidade: retrato de 1120 px disponível na URL declarada e selecionado em viewport móvel com densidade 3×.
+- Layout: hero móvel usa fluxo natural; ações, nota, folha e frase final não se intersectam em 320 e 375 px.
+- Responsividade: regressão aprovada em 320, 375, 768, 1024, 1115, 1440 e 1874 px, incluindo o novo caso 375 px/3×.
+- Acessibilidade: conteúdo e ordem do DOM foram preservados; texto não depende das imagens e a preferência de movimento reduzido continua coberta.
+- Performance: mantém WebP responsivo e carregamento tardio do retrato; nenhuma dependência ou script foi adicionado.
+- Limitação: as capturas reais confirmam a falha original, mas o mesmo aparelho Android não pôde ser retestado diretamente neste ambiente. A correção foi validada no Chrome headless e deve receber uma conferência curta no aparelho após a próxima publicação.

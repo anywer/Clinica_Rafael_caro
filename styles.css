@@ -237,18 +237,19 @@ p { max-width: 62ch; }
   .nav-cta { justify-content: center; }
   .menu-toggle[aria-expanded="true"] span:nth-of-type(2) { transform: translateY(4px) rotate(45deg); }
   .menu-toggle[aria-expanded="true"] span:nth-of-type(3) { transform: translateY(-4px) rotate(-45deg); }
-  .hero { min-height: 118svh; padding-top: calc(var(--header-height) + 8vh); }
-  .hero-grid { min-height: 64svh; grid-template-columns: 1fr; }
-  .hero-note { align-self: auto; margin: 0; }
-  .hero-orbits span:first-child { top: 54%; right: -24%; width: 68vw; }
-  .hero-orbits span:last-child { top: 65%; right: -38%; width: 72vw; }
-  .leaf-window-hero { width: 66vw; height: 24svh; }
-  .hero-closing { right: 7%; bottom: 5vh; }
+  .hero { min-height: auto; padding: calc(var(--header-height) + clamp(2.75rem, 8vh, 4.75rem)) 0 0; }
+  .hero-grid { min-height: auto; grid-template-columns: 1fr; gap: clamp(2.5rem, 7vh, 4rem); }
+  .hero-note { position: relative; z-index: 2; align-self: auto; width: min(100%, 24rem); margin: 0; }
+  .hero-orbits span:first-child { top: 47%; right: -24%; width: 68vw; opacity: .72; }
+  .hero-orbits span:last-child { top: 59%; right: -38%; width: 72vw; opacity: .68; }
+  .leaf-window-hero { position: relative; bottom: auto; left: auto; width: min(76vw, 32rem); height: clamp(11rem, 30svh, 17rem); margin-top: clamp(2rem, 6vh, 4rem); }
+  .hero-closing { position: relative; right: auto; bottom: auto; z-index: 2; width: var(--container); max-width: 18ch; margin: clamp(1.5rem, 5vh, 3rem) auto 0; padding-bottom: clamp(3.5rem, 9vh, 6rem); }
   .about-layout, .why-layout, .process-layout, .expectations-layout, .faq-layout, .booking-layout { grid-template-columns: 1fr; }
-  .about-layout { padding-top: 4vh; }
+  .about { padding: clamp(5rem, 12vh, 7rem) 0 clamp(6rem, 14vh, 9rem); }
+  .about-layout { min-height: auto; padding-top: 0; gap: clamp(3rem, 8vh, 5rem); }
   .portrait { width: min(72vw, 22rem); justify-self: center; margin-inline: auto; }
   .portrait picture { transform: none; }
-  .why-layout { padding-top: 18vh; }
+  .why-layout { padding-top: clamp(6rem, 15vh, 9rem); }
   .process { min-height: auto; padding: 14vh 0; }
   .process-layout { position: relative; top: auto; min-height: auto; }
   .process-heading { margin-bottom: 3rem; }
@@ -271,15 +272,17 @@ p { max-width: 62ch; }
 
 @media (max-width: 560px) {
   :root { --container: min(100% - 1.5rem, 480px); }
-  .brand::before { left: .25rem; width: 4.8rem; }
+  .site-header { background: rgb(255 255 255 / 96%); }
+  .brand::before { left: .25rem; width: 4.8rem; height: calc(var(--header-height) + .85rem); }
   .brand-mark { width: 3.65rem; }
   .brand-mark img { width: 3.25rem; height: 2.7rem; }
+  .hero { padding-top: calc(var(--header-height) + 2.5rem); }
   .hero-actions { align-items: stretch; flex-direction: column; }
   .hero-actions .button { width: 100%; }
   .hero-actions .text-link { align-self: flex-start; }
-  .hero-note { max-width: 15rem; }
-  .hero-closing { max-width: 11ch; font-size: 1.15rem; }
-  .about { padding-top: 12vh; }
+  .hero-note { max-width: 19rem; }
+  .leaf-window-hero { width: min(82vw, 24rem); height: clamp(10rem, 27svh, 14rem); }
+  .hero-closing { max-width: 18ch; font-size: 1.2rem; }
   .portrait { width: min(84vw, 21rem); }
   .audience-list { grid-template-columns: 1fr; }
   .audience-list article { min-height: auto; border-right: 0; border-bottom: 1px solid var(--line); }
